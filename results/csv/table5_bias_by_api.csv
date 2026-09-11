@@ -1,0 +1,7 @@
+api,success_calls,share_of_l1_total_pct
+NtWaitForSingleObject,28256,2.09
+NtOpenProcess,23159,1.71
+NtOpenProcessToken,16071,1.19
+NtOpenThread,15,0.00
+NtFreeVirtualMemory,22376,1.65
+TOTAL,89877,6.64

@@ -1,0 +1,10 @@
+group,calls,share_of_l1_successes_pct
+Process and shell creation suppressed,3382,0.34
+Thread created with a placeholder start routine,4002,0.40
+Cross-process memory access not performed,10890,1.09
+Hook installation answered with a sentinel,91,0.01
+Service start reported without being attempted,114,0.01
+Thread-attribute update not performed,40,0.00
+Data-carrying calls issued with substitute buffers,15014,1.50
+Opens of device paths and named pipes short-circuited,5644,0.56
+TOTAL,39177,3.91
