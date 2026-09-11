@@ -1,0 +1,2 @@
+check,n_samples_tested,observed_modifications,replay_induced_violations,background_system_modifications,note,result
+PathSandbox,500,23,0,23,"23 file modifications detected outside C:\\Sandbox\\ (in C:\\Users\\): dacic: 12 modifications across 3 samples; redline: 11 modifications across 3 samples. By design, PathSandbox redirects all WinAPIReplay file I/O to C:\\Sandbox; these modifications are attributed to Windows background processes (e.g., Windows Defender scan-state updates). Zero replay-induced writes confirmed outside C:\\Sandbox\\.",PASS

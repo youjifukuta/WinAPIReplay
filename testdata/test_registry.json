@@ -1,0 +1,107 @@
+{
+  "meta": {
+    "target_process": "test_registry.exe",
+    "process_bits": 64,
+    "collected_at": "2026-06-23T00:00:00Z",
+    "frida_version": "16.0",
+    "os": "Windows 11"
+  },
+  "events": [
+    {
+      "seq": 1,
+      "process_id": 1000,
+      "timestamp": 0.001,
+      "thread_id": 2000,
+      "api_name": "RegCreateKeyExW",
+      "args": ["0xffffffff80000001", "Software\\WinAPIReplayTest", 0, null, 0, 983103, null, null, null],
+      "inline_handles": [],
+      "out_handles": {"phkResult": "0x00000050"},
+      "return_val": "0x00000000",
+      "status": "success"
+    },
+    {
+      "seq": 2,
+      "process_id": 1000,
+      "timestamp": 0.002,
+      "thread_id": 2000,
+      "api_name": "RegSetValueExW",
+      "args": ["0x00000050", "TestValue", 0, 1, null, 10],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000000",
+      "status": "success"
+    },
+    {
+      "seq": 3,
+      "process_id": 1000,
+      "timestamp": 0.003,
+      "thread_id": 2000,
+      "api_name": "RegQueryValueExW",
+      "args": ["0x00000050", "TestValue", null, null, null, null],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000000",
+      "status": "success"
+    },
+    {
+      "seq": 4,
+      "process_id": 1000,
+      "timestamp": 0.004,
+      "thread_id": 2000,
+      "api_name": "RegCloseKey",
+      "args": ["0x00000050"],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000000",
+      "status": "success"
+    },
+    {
+      "seq": 5,
+      "process_id": 1000,
+      "timestamp": 0.005,
+      "thread_id": 2000,
+      "api_name": "RegOpenKeyExW",
+      "args": ["0xffffffff80000001", "Software\\WinAPIReplayTest", 0, 983103, null],
+      "inline_handles": [],
+      "out_handles": {"phkResult": "0x00000054"},
+      "return_val": "0x00000000",
+      "status": "success"
+    },
+    {
+      "seq": 6,
+      "process_id": 1000,
+      "timestamp": 0.006,
+      "thread_id": 2000,
+      "api_name": "RegDeleteValueW",
+      "args": ["0x00000054", "TestValue"],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000000",
+      "status": "success"
+    },
+    {
+      "seq": 7,
+      "process_id": 1000,
+      "timestamp": 0.007,
+      "thread_id": 2000,
+      "api_name": "RegCloseKey",
+      "args": ["0x00000054"],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000000",
+      "status": "success"
+    },
+    {
+      "seq": 8,
+      "process_id": 1000,
+      "timestamp": 0.008,
+      "thread_id": 2000,
+      "api_name": "RegDeleteKeyW",
+      "args": ["0xffffffff80000001", "Software\\WinAPIReplayTest"],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000000",
+      "status": "success"
+    }
+  ]
+}

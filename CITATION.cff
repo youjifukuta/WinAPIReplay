@@ -1,0 +1,81 @@
+cff-version: 1.2.0
+message: "If you use this software or these data, please cite both the software and the paper below."
+title: "WinAPIReplay"
+abstract: >-
+  WinAPIReplay re-executes each call recorded in a Windows API-call log as a real
+  operating-system call, without the malware binary, using a unified handle map for
+  cross-layer (Win32 and NT-native) handle chains and a three-tier sandbox that
+  confines every side effect to disposable places. This repository contains the
+  re-execution tool, the API signature database, the conversion and evaluation
+  scripts, the SHA-256 identifiers of the 500 analysed traces, and the processed
+  result files that support the figures and tables of the paper.
+type: software
+license: MIT
+authors:
+  - family-names: Fukuta
+    given-names: Youji
+    orcid: "https://orcid.org/0009-0001-0693-1039"
+    affiliation: "Faculty of Informatics / Cyber Informatics Research Institute, Kindai University, Higashiosaka-shi, Japan"
+  - family-names: Shiraishi
+    given-names: Yoshiaki
+    orcid: "https://orcid.org/0000-0002-8970-9408"
+    affiliation: "Graduate School of Engineering, Kobe University, Kobe-shi, Japan"
+  - family-names: Hirotomo
+    given-names: Masanori
+    orcid: "https://orcid.org/0009-0003-6990-1456"
+    affiliation: "Faculty of Science and Engineering, Saga University, Saga-shi, Japan"
+  - family-names: Mohri
+    given-names: Masami
+    orcid: "https://orcid.org/0000-0002-4644-4550"
+    affiliation: "Faculty of Informatics / Cyber Informatics Research Institute, Kindai University, Higashiosaka-shi, Japan"
+keywords:
+  - dynamic malware analysis
+  - API-call log re-execution
+  - behavioral reproducibility
+  - NT-native and Win32 API
+  - side-effect containment
+  - Sysmon telemetry generation
+  - malware family classification
+  - WinMET dataset
+repository-code: ""
+url: ""
+doi: ""
+version: ""
+date-released: ""
+
+preferred-citation:
+  type: article
+  title: "WinAPIReplay: Safely Re-Executing Win32 and NT-Native Malware API-Call Logs to Measure Behavioral Reproducibility and Generate Labeled Endpoint Telemetry"
+  authors:
+    - family-names: Fukuta
+      given-names: Youji
+      orcid: "https://orcid.org/0009-0001-0693-1039"
+    - family-names: Shiraishi
+      given-names: Yoshiaki
+      orcid: "https://orcid.org/0000-0002-8970-9408"
+    - family-names: Hirotomo
+      given-names: Masanori
+      orcid: "https://orcid.org/0009-0003-6990-1456"
+    - family-names: Mohri
+      given-names: Masami
+      orcid: "https://orcid.org/0000-0002-4644-4550"
+  journal: "Information"
+  publisher:
+    name: "MDPI"
+  issn: "2078-2489"
+  year: 2026
+  doi: ""
+  volume: ""
+  issue: ""
+  start: ""
+  end: ""
+
+references:
+  - type: data
+    title: "WinMET Dataset: Windows Malware Execution Traces"
+    doi: "10.5281/zenodo.12647555"
+    year: 2025
+    notes: >-
+      Input dataset. Not redistributed in this repository. Obtain it from the DOI
+      above and observe its own licence (GNU GPL v3.0 or later); see README.md
+      section 7.

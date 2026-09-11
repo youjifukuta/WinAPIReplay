@@ -1,0 +1,6 @@
+family,file_total,registry_total,network_winsock_total,process_total,dll_total,file_success,registry_success,network_winsock_success,process_success,dll_success,file_rate,registry_rate,network_winsock_rate,process_rate,dll_rate
+agenttesla,63014,151548,43,242475,55672,47773,70505,39,216818,5308,75.8,46.5,90.7,89.4,9.5
+amadey,33344,296662,0,272141,33022,28411,190388,0,268880,10366,85.2,64.2,0.0,98.8,31.4
+berbew,1300,1349,0,597,1404,912,1100,0,597,200,70.2,81.5,0.0,100.0,14.2
+dacic,20277,11511,0,59063,17520,14886,4644,0,56570,1616,73.4,40.3,0.0,95.8,9.2
+redline,7596,4638,26,7766,9850,6900,2556,19,6762,961,90.8,55.1,73.1,87.1,9.8

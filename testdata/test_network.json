@@ -1,0 +1,71 @@
+{
+  "meta": {
+    "target_process": "test_network.exe",
+    "process_bits": 64,
+    "collected_at": "2026-06-23T00:00:00Z",
+    "frida_version": "16.0",
+    "os": "Windows 11"
+  },
+  "events": [
+    {
+      "seq": 1,
+      "process_id": 1000,
+      "timestamp": 0.001,
+      "thread_id": 2000,
+      "api_name": "socket",
+      "args": [2, 1, 6],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000004",
+      "status": "success"
+    },
+    {
+      "seq": 2,
+      "process_id": 1000,
+      "timestamp": 0.002,
+      "thread_id": 2000,
+      "api_name": "connect",
+      "args": ["0x00000004", null, 16],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000000",
+      "status": "success"
+    },
+    {
+      "seq": 3,
+      "process_id": 1000,
+      "timestamp": 0.003,
+      "thread_id": 2000,
+      "api_name": "send",
+      "args": ["0x00000004", null, 5, 0],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000005",
+      "status": "success"
+    },
+    {
+      "seq": 4,
+      "process_id": 1000,
+      "timestamp": 0.004,
+      "thread_id": 2000,
+      "api_name": "recv",
+      "args": ["0x00000004", null, 512, 0],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000005",
+      "status": "success"
+    },
+    {
+      "seq": 5,
+      "process_id": 1000,
+      "timestamp": 0.005,
+      "thread_id": 2000,
+      "api_name": "closesocket",
+      "args": ["0x00000004"],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000000",
+      "status": "success"
+    }
+  ]
+}

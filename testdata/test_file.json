@@ -1,0 +1,95 @@
+{
+  "meta": {
+    "target_process": "test_file.exe",
+    "process_bits": 64,
+    "collected_at": "2026-06-23T00:00:00Z",
+    "frida_version": "16.0",
+    "os": "Windows 11"
+  },
+  "events": [
+    {
+      "seq": 1,
+      "process_id": 1000,
+      "timestamp": 0.001,
+      "thread_id": 2000,
+      "api_name": "CreateFileW",
+      "args": ["C:\\replay_test_write.txt", 1073741824, 0, null, 2, 128, null],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000004",
+      "status": "success"
+    },
+    {
+      "seq": 2,
+      "process_id": 1000,
+      "timestamp": 0.002,
+      "thread_id": 2000,
+      "api_name": "WriteFile",
+      "args": ["0x00000004", null, 13, null, null],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000001",
+      "status": "success"
+    },
+    {
+      "seq": 3,
+      "process_id": 1000,
+      "timestamp": 0.003,
+      "thread_id": 2000,
+      "api_name": "CloseHandle",
+      "args": ["0x00000004"],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000001",
+      "status": "success"
+    },
+    {
+      "seq": 4,
+      "process_id": 1000,
+      "timestamp": 0.004,
+      "thread_id": 2000,
+      "api_name": "CreateFileW",
+      "args": ["C:\\replay_test_write.txt", 2147483648, 0, null, 3, 128, null],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000008",
+      "status": "success"
+    },
+    {
+      "seq": 5,
+      "process_id": 1000,
+      "timestamp": 0.005,
+      "thread_id": 2000,
+      "api_name": "ReadFile",
+      "args": ["0x00000008", null, 13, null, null],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000001",
+      "status": "success"
+    },
+    {
+      "seq": 6,
+      "process_id": 1000,
+      "timestamp": 0.006,
+      "thread_id": 2000,
+      "api_name": "CloseHandle",
+      "args": ["0x00000008"],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000001",
+      "status": "success"
+    },
+    {
+      "seq": 7,
+      "process_id": 1000,
+      "timestamp": 0.007,
+      "thread_id": 2000,
+      "api_name": "DeleteFileW",
+      "args": ["C:\\replay_test_write.txt"],
+      "inline_handles": [],
+      "out_handles": {},
+      "return_val": "0x00000001",
+      "status": "success"
+    }
+  ]
+}

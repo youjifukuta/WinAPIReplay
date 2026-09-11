@@ -1,0 +1,55 @@
+# Python environment used for the post-processing scripts in scripts/python/.
+#
+# Interpreter: CPython 3.14.5 (64-bit, Windows)
+#
+# This list is the verbatim output of
+#     <venv>\Scripts\python.exe -m pip freeze
+# taken from the virtual environment that the experiment pipeline actually
+# invoked. run_exp0.ps1, run_exp1.ps1 and run_exp6.ps1 all call that interpreter
+# by absolute path ($PYTHON = "...\WinAPICollector\venv\Scripts\python.exe"), so
+# the environment is identified unambiguously.
+#
+# The list is NOT pruned to direct dependencies: it is the full freeze, including
+# transitive dependencies, so that the exact environment can be recreated.
+#
+# frida / frida-tools / websockets / pypdf / tqdm are present in the environment
+# but are not imported by any script in scripts/python/. They are retained here
+# only because this file records the environment as it was.
+#
+#   python -m venv .venv
+#   .venv\Scripts\activate
+#   pip install -r requirements.txt
+
+colorama==0.4.6
+contourpy==1.3.3
+cycler==0.12.1
+et_xmlfile==2.0.0
+fonttools==4.63.0
+frida==17.9.10
+frida-tools==14.8.2
+iniconfig==2.3.0
+joblib==1.5.3
+kiwisolver==1.5.0
+matplotlib==3.11.0
+narwhals==2.23.0
+numpy==2.5.0
+openpyxl==3.1.5
+packaging==26.2
+pandas==3.0.3
+pillow==12.2.0
+pluggy==1.6.0
+prompt_toolkit==3.0.52
+Pygments==2.20.0
+pyparsing==3.3.2
+pypdf==6.14.2
+pytest==9.1.0
+python-dateutil==2.9.0.post0
+scikit-learn==1.9.0
+scipy==1.18.0
+seaborn==0.13.2
+six==1.17.0
+threadpoolctl==3.6.0
+tqdm==4.68.3
+tzdata==2026.2
+wcwidth==0.7.0
+websockets==13.1

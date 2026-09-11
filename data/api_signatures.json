@@ -1,0 +1,2793 @@
+{
+  "_meta": {
+    "description": "WinAPIReplay Layer 1 API Signature Database",
+    "version": "1.1",
+    "total": 302,
+    "arg_types": {
+      "WSTRING": "Wide string (LPCWSTR) - allocate wchar_t buffer from logged string",
+      "DIRECT": "Integer/DWORD/BOOL - use value as-is",
+      "HANDLE": "Windows handle - resolve via HandleMap before calling",
+      "NULL_OR_PTR": "Optional pointer (security attrs etc.) - pass as NULL",
+      "DATA_IN": "Input data buffer - allocate zeros of size_bytes or size_arg bytes",
+      "DATA_OUT": "Output data buffer - allocate size_bytes or size_arg bytes",
+      "ADDR_PTR": "Socket address pointer - resolve via PointerMap (from GetAddrInfoW)",
+      "PTR_OUT": "Pointer-to-pointer output - register result in PointerMap",
+      "PROCESS_ID": "Process ID (dwProcessId in OpenProcess etc.) - resolve via PidMap",
+      "HANDLE_ARRAY": "Pointer to HANDLE array (WaitForMultipleObjects etc.) - build from inline_handles via HandleMap; nullptr + [APPROX] if inline_handles absent",
+      "SIZE_INOUT": "In/out buffer size (LPDWORD) - alloc DWORD init to default_size; also alloc linked DATA_OUT at size_arg index to default_size; retry once on ERROR_INSUFFICIENT_BUFFER",
+      "ASTRING": "ANSI string (LPCSTR) - convert wstring to char[] buffer (used for GetProcAddress function name etc.)",
+      "REGISTRY_SUBKEY": "Registry subkey path - if RegistrySandbox enabled: resolve preceding HANDLE arg via HandleMap, call Redirect(hKey,subkey) → override preceding HANDLE arg value with sandbox_hkey and use sandbox_subkey as buffer; else treat as WSTRING",
+      "REGISTRY_SUBKEY_A": "Registry subkey path (ANSI variant) - same sandbox redirect logic as REGISTRY_SUBKEY, but produces char[] via WideCharToMultiByte(CP_ACP) instead of wchar_t[] (used for RegOpenKeyExA / RegCreateKeyExA etc.)"
+    },
+    "return_types": {
+      "HANDLE": "Register return value in HandleMap",
+      "SOCKET": "Register return value in HandleMap (SOCKET type)",
+      "HMODULE": "Register return value in HandleMap (module handle)",
+      "HINTERNET": "Register return value in HandleMap (WinINet handle)",
+      "SC_HANDLE": "Register return value in HandleMap (service handle)",
+      "HCRYPTPROV": "Register return value in HandleMap (crypto provider)",
+      "HCRYPTHASH": "Register return value in HandleMap (crypto hash)",
+      "PTR": "Register return value in PointerMap (virtual address)",
+      "BOOL": "Success/failure indicator, no HandleMap action",
+      "STATUS": "LSTATUS / NTSTATUS (0 = success), no HandleMap action",
+      "INT": "Integer result, no HandleMap action",
+      "VOID": "No return value"
+    },
+    "out_handle": {
+      "arg_idx": "0-based index of the output pointer argument",
+      "key": "Field name used in out_handles (matches log_format_spec.md)"
+    }
+  },
+  "AdjustTokenPrivileges": {
+    "module": "advapi32.dll",
+    "category": "token",
+    "args": [
+      "HANDLE",
+      "DIRECT",
+      "NULL_OR_PTR",
+      "DIRECT",
+      "NULL_OR_PTR",
+      "NULL_OR_PTR"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CloseHandle": {
+    "module": "kernel32.dll",
+    "category": "file",
+    "args": [
+      "HANDLE"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": 0
+  },
+  "CloseServiceHandle": {
+    "module": "advapi32.dll",
+    "category": "service",
+    "args": [
+      "HANDLE"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": 0
+  },
+  "ControlService": {
+    "module": "advapi32.dll",
+    "category": "service",
+    "args": [
+      "HANDLE",
+      "DIRECT",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 28
+      }
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CopyFileW": {
+    "module": "kernel32.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "WSTRING",
+      "DIRECT"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CreateDirectoryW": {
+    "module": "kernel32.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "NULL_OR_PTR"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CreateEventA": {
+    "module": "kernel32.dll",
+    "category": "sync",
+    "args": [
+      "NULL_OR_PTR",
+      "DIRECT",
+      "DIRECT",
+      "ASTRING"
+    ],
+    "return_type": "HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CreateEventW": {
+    "module": "kernel32.dll",
+    "category": "sync",
+    "args": [
+      "NULL_OR_PTR",
+      "DIRECT",
+      "DIRECT",
+      "WSTRING"
+    ],
+    "return_type": "HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CreateFileA": {
+    "module": "kernel32.dll",
+    "category": "file",
+    "args": [
+      "ASTRING",
+      "DIRECT",
+      "DIRECT",
+      "NULL_OR_PTR",
+      "DIRECT",
+      "DIRECT",
+      "HANDLE"
+    ],
+    "return_type": "HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CreateFileW": {
+    "module": "kernel32.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "DIRECT",
+      "DIRECT",
+      "NULL_OR_PTR",
+      "DIRECT",
+      "DIRECT",
+      "HANDLE"
+    ],
+    "return_type": "HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CreateMutexA": {
+    "module": "kernel32.dll",
+    "category": "sync",
+    "args": [
+      "NULL_OR_PTR",
+      "DIRECT",
+      "ASTRING"
+    ],
+    "return_type": "HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CreateMutexW": {
+    "module": "kernel32.dll",
+    "category": "sync",
+    "args": [
+      "NULL_OR_PTR",
+      "DIRECT",
+      "WSTRING"
+    ],
+    "return_type": "HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CreateProcessA": {
+    "module": "kernel32.dll",
+    "category": "process",
+    "args": [
+      "ASTRING",
+      "ASTRING",
+      "NULL_OR_PTR",
+      "NULL_OR_PTR",
+      "DIRECT",
+      "DIRECT",
+      "NULL_OR_PTR",
+      "ASTRING",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 104
+      },
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 24
+      }
+    ],
+    "return_type": "BOOL",
+    "out_handle": {
+      "type": "PROCESS_INFORMATION",
+      "arg_idx": 9
+    },
+    "invalidates_arg": null
+  },
+  "CreateProcessW": {
+    "module": "kernel32.dll",
+    "category": "process",
+    "args": [
+      "WSTRING",
+      "WSTRING",
+      "NULL_OR_PTR",
+      "NULL_OR_PTR",
+      "DIRECT",
+      "DIRECT",
+      "NULL_OR_PTR",
+      "WSTRING",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 104
+      },
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 24
+      }
+    ],
+    "return_type": "BOOL",
+    "out_handle": {
+      "type": "PROCESS_INFORMATION",
+      "arg_idx": 9
+    },
+    "invalidates_arg": null
+  },
+  "CreateRemoteThread": {
+    "module": "kernel32.dll",
+    "category": "process",
+    "args": [
+      "HANDLE",
+      "NULL_OR_PTR",
+      "DIRECT",
+      "NULL_OR_PTR",
+      "NULL_OR_PTR",
+      "DIRECT",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 4
+      }
+    ],
+    "return_type": "HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CreateServiceA": {
+    "module": "advapi32.dll",
+    "category": "service",
+    "args": [
+      "HANDLE",
+      "ASTRING",
+      "ASTRING",
+      "DIRECT",
+      "DIRECT",
+      "DIRECT",
+      "DIRECT",
+      "ASTRING",
+      "ASTRING",
+      "NULL_OR_PTR",
+      "ASTRING",
+      "ASTRING",
+      "ASTRING"
+    ],
+    "return_type": "SC_HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CreateServiceW": {
+    "module": "advapi32.dll",
+    "category": "service",
+    "args": [
+      "HANDLE",
+      "WSTRING",
+      "WSTRING",
+      "DIRECT",
+      "DIRECT",
+      "DIRECT",
+      "DIRECT",
+      "WSTRING",
+      "WSTRING",
+      "NULL_OR_PTR",
+      "WSTRING",
+      "WSTRING",
+      "WSTRING"
+    ],
+    "return_type": "SC_HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CreateThread": {
+    "module": "kernel32.dll",
+    "category": "process",
+    "args": [
+      "NULL_OR_PTR",
+      "DIRECT",
+      "NULL_OR_PTR",
+      "NULL_OR_PTR",
+      "DIRECT",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 4
+      }
+    ],
+    "return_type": "HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CryptAcquireContextA": {
+    "module": "advapi32.dll",
+    "category": "crypto",
+    "args": [
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 8
+      },
+      "ASTRING",
+      "ASTRING",
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "BOOL",
+    "out_handle": {
+      "type": "HCRYPTPROV",
+      "arg_idx": 0,
+      "key": "phProv"
+    },
+    "invalidates_arg": null
+  },
+  "CryptAcquireContextW": {
+    "module": "advapi32.dll",
+    "category": "crypto",
+    "args": [
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 8
+      },
+      "WSTRING",
+      "WSTRING",
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "BOOL",
+    "out_handle": {
+      "type": "HCRYPTPROV",
+      "arg_idx": 0,
+      "key": "phProv"
+    },
+    "invalidates_arg": null
+  },
+  "CryptCreateHash": {
+    "module": "advapi32.dll",
+    "category": "crypto",
+    "args": [
+      "HANDLE",
+      "DIRECT",
+      "HANDLE",
+      "DIRECT",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 8
+      }
+    ],
+    "return_type": "BOOL",
+    "out_handle": {
+      "type": "HCRYPTHASH",
+      "arg_idx": 4,
+      "key": "phHash"
+    },
+    "invalidates_arg": null
+  },
+  "CryptDecrypt": {
+    "module": "advapi32.dll",
+    "category": "crypto",
+    "args": [
+      "HANDLE",
+      "HANDLE",
+      "DIRECT",
+      "DIRECT",
+      {
+        "type": "DATA_IN",
+        "size_arg": 5
+      },
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 4
+      }
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CryptDestroyHash": {
+    "module": "advapi32.dll",
+    "category": "crypto",
+    "args": [
+      "HANDLE"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": 0
+  },
+  "CryptEncrypt": {
+    "module": "advapi32.dll",
+    "category": "crypto",
+    "args": [
+      "HANDLE",
+      "HANDLE",
+      "DIRECT",
+      "DIRECT",
+      {
+        "type": "DATA_IN",
+        "size_arg": 6
+      },
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 4
+      },
+      "DIRECT"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CryptHashData": {
+    "module": "advapi32.dll",
+    "category": "crypto",
+    "args": [
+      "HANDLE",
+      {
+        "type": "DATA_IN",
+        "size_arg": 2
+      },
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "CryptReleaseContext": {
+    "module": "advapi32.dll",
+    "category": "crypto",
+    "args": [
+      "HANDLE",
+      "DIRECT"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": 0
+  },
+  "DeleteFileA": {
+    "module": "kernel32.dll",
+    "category": "file",
+    "args": [
+      "ASTRING"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "DeleteFileW": {
+    "module": "kernel32.dll",
+    "category": "file",
+    "args": [
+      "WSTRING"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "FreeAddrInfoW": {
+    "module": "ws2_32.dll",
+    "category": "network_winsock",
+    "args": [
+      "NULL_OR_PTR"
+    ],
+    "return_type": "VOID",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "FreeLibrary": {
+    "module": "kernel32.dll",
+    "category": "dll",
+    "args": [
+      "HANDLE"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": 0
+  },
+  "GetAddrInfoW": {
+    "module": "ws2_32.dll",
+    "category": "network_winsock",
+    "args": [
+      "WSTRING",
+      "WSTRING",
+      "NULL_OR_PTR",
+      {
+        "type": "PTR_OUT",
+        "size_bytes": 8
+      }
+    ],
+    "return_type": "INT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetExitCodeProcess": {
+    "module": "kernel32.dll",
+    "category": "process",
+    "args": [
+      "HANDLE",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 4
+      }
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetProcAddress": {
+    "module": "kernel32.dll",
+    "category": "dll",
+    "args": [
+      "HANDLE",
+      "ASTRING"
+    ],
+    "return_type": "PTR",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetTempFileNameW": {
+    "module": "kernel32.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "WSTRING",
+      "DIRECT",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 520
+      }
+    ],
+    "return_type": "INT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetTempPathW": {
+    "module": "kernel32.dll",
+    "category": "file",
+    "args": [
+      "DIRECT",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 520
+      }
+    ],
+    "return_type": "DIRECT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "HttpOpenRequestA": {
+    "module": "wininet.dll",
+    "category": "network_wininet",
+    "args": [
+      "HANDLE",
+      "ASTRING",
+      "ASTRING",
+      "ASTRING",
+      "ASTRING",
+      "NULL_OR_PTR",
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "HINTERNET",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "HttpOpenRequestW": {
+    "module": "wininet.dll",
+    "category": "network_wininet",
+    "args": [
+      "HANDLE",
+      "WSTRING",
+      "WSTRING",
+      "WSTRING",
+      "WSTRING",
+      "NULL_OR_PTR",
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "HINTERNET",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "HttpSendRequestA": {
+    "module": "wininet.dll",
+    "category": "network_wininet",
+    "args": [
+      "HANDLE",
+      "ASTRING",
+      "DIRECT",
+      {
+        "type": "DATA_IN",
+        "size_arg": 4
+      },
+      "DIRECT"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "HttpSendRequestW": {
+    "module": "wininet.dll",
+    "category": "network_wininet",
+    "args": [
+      "HANDLE",
+      "WSTRING",
+      "DIRECT",
+      {
+        "type": "DATA_IN",
+        "size_arg": 4
+      },
+      "DIRECT"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "InternetCloseHandle": {
+    "module": "wininet.dll",
+    "category": "network_wininet",
+    "args": [
+      "HANDLE"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": 0
+  },
+  "InternetConnectA": {
+    "module": "wininet.dll",
+    "category": "network_wininet",
+    "args": [
+      "HANDLE",
+      "ASTRING",
+      "DIRECT",
+      "ASTRING",
+      "ASTRING",
+      "DIRECT",
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "HINTERNET",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "InternetConnectW": {
+    "module": "wininet.dll",
+    "category": "network_wininet",
+    "args": [
+      "HANDLE",
+      "WSTRING",
+      "DIRECT",
+      "WSTRING",
+      "WSTRING",
+      "DIRECT",
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "HINTERNET",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "InternetOpenA": {
+    "module": "wininet.dll",
+    "category": "network_wininet",
+    "args": [
+      "ASTRING",
+      "DIRECT",
+      "ASTRING",
+      "ASTRING",
+      "DIRECT"
+    ],
+    "return_type": "HINTERNET",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "InternetOpenW": {
+    "module": "wininet.dll",
+    "category": "network_wininet",
+    "args": [
+      "WSTRING",
+      "DIRECT",
+      "WSTRING",
+      "WSTRING",
+      "DIRECT"
+    ],
+    "return_type": "HINTERNET",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "InternetReadFile": {
+    "module": "wininet.dll",
+    "category": "network_wininet",
+    "args": [
+      "HANDLE",
+      {
+        "type": "DATA_OUT",
+        "size_arg": 2
+      },
+      "DIRECT",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 4
+      }
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "LoadLibraryA": {
+    "module": "kernel32.dll",
+    "category": "dll",
+    "args": [
+      "ASTRING"
+    ],
+    "return_type": "HMODULE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "LoadLibraryExA": {
+    "module": "kernel32.dll",
+    "category": "dll",
+    "args": [
+      "ASTRING",
+      "HANDLE",
+      "DIRECT"
+    ],
+    "return_type": "HMODULE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "LoadLibraryExW": {
+    "module": "kernel32.dll",
+    "category": "dll",
+    "args": [
+      "WSTRING",
+      "HANDLE",
+      "DIRECT"
+    ],
+    "return_type": "HMODULE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "LoadLibraryW": {
+    "module": "kernel32.dll",
+    "category": "dll",
+    "args": [
+      "WSTRING"
+    ],
+    "return_type": "HMODULE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "MoveFileExW": {
+    "module": "kernel32.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "WSTRING",
+      "DIRECT"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "NtUnmapViewOfSection": {
+    "module": "ntdll.dll",
+    "category": "process",
+    "args": [
+      "HANDLE",
+      "NULL_OR_PTR"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "OpenMutexA": {
+    "module": "kernel32.dll",
+    "category": "sync",
+    "args": [
+      "DIRECT",
+      "DIRECT",
+      "ASTRING"
+    ],
+    "return_type": "HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "OpenMutexW": {
+    "module": "kernel32.dll",
+    "category": "sync",
+    "args": [
+      "DIRECT",
+      "DIRECT",
+      "WSTRING"
+    ],
+    "return_type": "HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "OpenProcess": {
+    "module": "kernel32.dll",
+    "category": "process",
+    "args": [
+      "DIRECT",
+      "DIRECT",
+      "PROCESS_ID"
+    ],
+    "return_type": "HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "OpenProcessToken": {
+    "module": "advapi32.dll",
+    "category": "token",
+    "args": [
+      "HANDLE",
+      "DIRECT",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 8
+      }
+    ],
+    "return_type": "BOOL",
+    "out_handle": {
+      "type": "HANDLE",
+      "arg_idx": 2,
+      "key": "TokenHandle"
+    },
+    "invalidates_arg": null
+  },
+  "OpenSCManagerA": {
+    "module": "advapi32.dll",
+    "category": "service",
+    "args": [
+      "ASTRING",
+      "ASTRING",
+      "DIRECT"
+    ],
+    "return_type": "SC_HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "OpenSCManagerW": {
+    "module": "advapi32.dll",
+    "category": "service",
+    "args": [
+      "WSTRING",
+      "WSTRING",
+      "DIRECT"
+    ],
+    "return_type": "SC_HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "OpenServiceA": {
+    "module": "advapi32.dll",
+    "category": "service",
+    "args": [
+      "HANDLE",
+      "ASTRING",
+      "DIRECT"
+    ],
+    "return_type": "SC_HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "OpenServiceW": {
+    "module": "advapi32.dll",
+    "category": "service",
+    "args": [
+      "HANDLE",
+      "WSTRING",
+      "DIRECT"
+    ],
+    "return_type": "SC_HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "QueueUserAPC": {
+    "module": "kernel32.dll",
+    "category": "process",
+    "args": [
+      "NULL_OR_PTR",
+      "HANDLE",
+      "DIRECT"
+    ],
+    "return_type": "DIRECT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "ReadFile": {
+    "module": "kernel32.dll",
+    "category": "file",
+    "args": [
+      "HANDLE",
+      {
+        "type": "DATA_OUT",
+        "size_arg": 2
+      },
+      "DIRECT",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 4
+      },
+      "NULL_OR_PTR"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "ReadProcessMemory": {
+    "module": "kernel32.dll",
+    "category": "process",
+    "args": [
+      "HANDLE",
+      "NULL_OR_PTR",
+      {
+        "type": "DATA_OUT",
+        "size_arg": 3
+      },
+      "DIRECT",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 8
+      }
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "RegCloseKey": {
+    "module": "advapi32.dll",
+    "category": "registry",
+    "args": [
+      "HANDLE"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": 0
+  },
+  "RegCreateKeyExA": {
+    "module": "advapi32.dll",
+    "category": "registry",
+    "args": [
+      "HANDLE",
+      "REGISTRY_SUBKEY_A",
+      "DIRECT",
+      "NULL_OR_PTR",
+      "DIRECT",
+      "DIRECT",
+      "NULL_OR_PTR",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 8
+      },
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 4
+      }
+    ],
+    "return_type": "STATUS",
+    "out_handle": {
+      "type": "HKEY",
+      "arg_idx": 7,
+      "key": "phkResult"
+    },
+    "invalidates_arg": null
+  },
+  "RegCreateKeyExW": {
+    "module": "advapi32.dll",
+    "category": "registry",
+    "args": [
+      "HANDLE",
+      "REGISTRY_SUBKEY",
+      "DIRECT",
+      "NULL_OR_PTR",
+      "DIRECT",
+      "DIRECT",
+      "NULL_OR_PTR",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 8
+      },
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 4
+      }
+    ],
+    "return_type": "STATUS",
+    "out_handle": {
+      "type": "HKEY",
+      "arg_idx": 7,
+      "key": "phkResult"
+    },
+    "invalidates_arg": null
+  },
+  "RegDeleteKeyW": {
+    "module": "advapi32.dll",
+    "category": "registry",
+    "args": [
+      "HANDLE",
+      "REGISTRY_SUBKEY"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "RegDeleteValueW": {
+    "module": "advapi32.dll",
+    "category": "registry",
+    "args": [
+      "HANDLE",
+      "WSTRING"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "RegOpenKeyExA": {
+    "module": "advapi32.dll",
+    "category": "registry",
+    "args": [
+      "HANDLE",
+      "REGISTRY_SUBKEY_A",
+      "DIRECT",
+      "DIRECT",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 8
+      }
+    ],
+    "return_type": "STATUS",
+    "out_handle": {
+      "type": "HKEY",
+      "arg_idx": 4,
+      "key": "phkResult"
+    },
+    "invalidates_arg": null
+  },
+  "RegOpenKeyExW": {
+    "module": "advapi32.dll",
+    "category": "registry",
+    "args": [
+      "HANDLE",
+      "REGISTRY_SUBKEY",
+      "DIRECT",
+      "DIRECT",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 8
+      }
+    ],
+    "return_type": "STATUS",
+    "out_handle": {
+      "type": "HKEY",
+      "arg_idx": 4,
+      "key": "phkResult"
+    },
+    "invalidates_arg": null
+  },
+  "RegQueryValueExA": {
+    "module": "advapi32.dll",
+    "category": "registry",
+    "args": [
+      "HANDLE",
+      "ASTRING",
+      "NULL_OR_PTR",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 4
+      },
+      {
+        "type": "DATA_OUT"
+      },
+      {
+        "type": "SIZE_INOUT",
+        "default_size": 65536,
+        "size_arg": 4
+      }
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "RegQueryValueExW": {
+    "module": "advapi32.dll",
+    "category": "registry",
+    "args": [
+      "HANDLE",
+      "WSTRING",
+      "NULL_OR_PTR",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 4
+      },
+      {
+        "type": "DATA_OUT"
+      },
+      {
+        "type": "SIZE_INOUT",
+        "default_size": 65536,
+        "size_arg": 4
+      }
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "RegSetValueExA": {
+    "module": "advapi32.dll",
+    "category": "registry",
+    "args": [
+      "HANDLE",
+      "ASTRING",
+      "DIRECT",
+      "DIRECT",
+      {
+        "type": "DATA_IN",
+        "size_arg": 5
+      },
+      "DIRECT"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "RegSetValueExW": {
+    "module": "advapi32.dll",
+    "category": "registry",
+    "args": [
+      "HANDLE",
+      "WSTRING",
+      "DIRECT",
+      "DIRECT",
+      {
+        "type": "DATA_IN",
+        "size_arg": 5
+      },
+      "DIRECT"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "ReleaseMutex": {
+    "module": "kernel32.dll",
+    "category": "sync",
+    "args": [
+      "HANDLE"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "ResetEvent": {
+    "module": "kernel32.dll",
+    "category": "sync",
+    "args": [
+      "HANDLE"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "SetEvent": {
+    "module": "kernel32.dll",
+    "category": "sync",
+    "args": [
+      "HANDLE"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "SetWindowsHookExA": {
+    "module": "user32.dll",
+    "category": "hook",
+    "args": [
+      "DIRECT",
+      "NULL_OR_PTR",
+      "HANDLE",
+      "DIRECT"
+    ],
+    "return_type": "HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "SetWindowsHookExW": {
+    "module": "user32.dll",
+    "category": "hook",
+    "args": [
+      "DIRECT",
+      "NULL_OR_PTR",
+      "HANDLE",
+      "DIRECT"
+    ],
+    "return_type": "HANDLE",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "ShellExecuteA": {
+    "module": "shell32.dll",
+    "category": "shell",
+    "args": [
+      "DIRECT",
+      "ASTRING",
+      "ASTRING",
+      "ASTRING",
+      "ASTRING",
+      "DIRECT"
+    ],
+    "return_type": "PTR",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "ShellExecuteW": {
+    "module": "shell32.dll",
+    "category": "shell",
+    "args": [
+      "DIRECT",
+      "WSTRING",
+      "WSTRING",
+      "WSTRING",
+      "WSTRING",
+      "DIRECT"
+    ],
+    "return_type": "PTR",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "StartServiceA": {
+    "module": "advapi32.dll",
+    "category": "service",
+    "args": [
+      "HANDLE",
+      "DIRECT",
+      "NULL_OR_PTR"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "StartServiceW": {
+    "module": "advapi32.dll",
+    "category": "service",
+    "args": [
+      "HANDLE",
+      "DIRECT",
+      "NULL_OR_PTR"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "TerminateProcess": {
+    "module": "kernel32.dll",
+    "category": "process",
+    "args": [
+      "HANDLE",
+      "DIRECT"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "VirtualAlloc": {
+    "module": "kernel32.dll",
+    "category": "process",
+    "args": [
+      "NULL_OR_PTR",
+      "DIRECT",
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "PTR",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "VirtualAllocEx": {
+    "module": "kernel32.dll",
+    "category": "process",
+    "args": [
+      "HANDLE",
+      "NULL_OR_PTR",
+      "DIRECT",
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "PTR",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "VirtualFree": {
+    "module": "kernel32.dll",
+    "category": "process",
+    "args": [
+      "NULL_OR_PTR",
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "VirtualProtect": {
+    "module": "kernel32.dll",
+    "category": "process",
+    "args": [
+      "NULL_OR_PTR",
+      "DIRECT",
+      "DIRECT",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 4
+      }
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "WSACleanup": {
+    "module": "ws2_32.dll",
+    "category": "network_winsock",
+    "args": [],
+    "return_type": "INT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "WSAConnect": {
+    "module": "ws2_32.dll",
+    "category": "network_winsock",
+    "args": [
+      "HANDLE",
+      "ADDR_PTR",
+      "DIRECT",
+      "NULL_OR_PTR",
+      "NULL_OR_PTR",
+      "NULL_OR_PTR",
+      "NULL_OR_PTR"
+    ],
+    "return_type": "INT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "WSAStartup": {
+    "module": "ws2_32.dll",
+    "category": "network_winsock",
+    "args": [
+      "DIRECT",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 408
+      }
+    ],
+    "return_type": "INT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "WaitForMultipleObjects": {
+    "module": "kernel32.dll",
+    "category": "sync",
+    "args": [
+      "DIRECT",
+      "HANDLE_ARRAY",
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "DIRECT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "WaitForMultipleObjectsEx": {
+    "module": "kernel32.dll",
+    "category": "sync",
+    "args": [
+      "DIRECT",
+      "HANDLE_ARRAY",
+      "DIRECT",
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "DIRECT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "WaitForSingleObject": {
+    "module": "kernel32.dll",
+    "category": "sync",
+    "args": [
+      "HANDLE",
+      "DIRECT"
+    ],
+    "return_type": "DIRECT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "WinExec": {
+    "module": "kernel32.dll",
+    "category": "shell",
+    "args": [
+      "WSTRING",
+      "DIRECT"
+    ],
+    "return_type": "DIRECT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "WriteFile": {
+    "module": "kernel32.dll",
+    "category": "file",
+    "args": [
+      "HANDLE",
+      {
+        "type": "DATA_IN",
+        "size_arg": 2
+      },
+      "DIRECT",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 4
+      },
+      "NULL_OR_PTR"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "WriteProcessMemory": {
+    "module": "kernel32.dll",
+    "category": "process",
+    "args": [
+      "HANDLE",
+      "NULL_OR_PTR",
+      {
+        "type": "DATA_IN",
+        "size_arg": 3
+      },
+      "DIRECT",
+      {
+        "type": "DATA_OUT",
+        "size_bytes": 8
+      }
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "accept": {
+    "module": "ws2_32.dll",
+    "category": "network_winsock",
+    "args": [
+      "HANDLE",
+      "NULL_OR_PTR",
+      "NULL_OR_PTR"
+    ],
+    "return_type": "SOCKET",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "bind": {
+    "module": "ws2_32.dll",
+    "category": "network_winsock",
+    "args": [
+      "HANDLE",
+      "ADDR_PTR",
+      "DIRECT"
+    ],
+    "return_type": "INT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "closesocket": {
+    "module": "ws2_32.dll",
+    "category": "network_winsock",
+    "args": [
+      "HANDLE"
+    ],
+    "return_type": "INT",
+    "out_handle": null,
+    "invalidates_arg": 0
+  },
+  "connect": {
+    "module": "ws2_32.dll",
+    "category": "network_winsock",
+    "args": [
+      "HANDLE",
+      "ADDR_PTR",
+      "DIRECT"
+    ],
+    "return_type": "INT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "listen": {
+    "module": "ws2_32.dll",
+    "category": "network_winsock",
+    "args": [
+      "HANDLE",
+      "DIRECT"
+    ],
+    "return_type": "INT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "recv": {
+    "module": "ws2_32.dll",
+    "category": "network_winsock",
+    "args": [
+      "HANDLE",
+      {
+        "type": "DATA_OUT",
+        "size_arg": 2
+      },
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "INT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "send": {
+    "module": "ws2_32.dll",
+    "category": "network_winsock",
+    "args": [
+      "HANDLE",
+      {
+        "type": "DATA_IN",
+        "size_arg": 2
+      },
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "INT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "socket": {
+    "module": "ws2_32.dll",
+    "category": "network_winsock",
+    "args": [
+      "DIRECT",
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "SOCKET",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetLastInputInfo": {
+    "module": "user32.dll",
+    "category": "unknown",
+    "args": [
+      "NULL_OR_PTR"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetComputerNameW": {
+    "module": "kernel32.dll",
+    "category": "unknown",
+    "args": [
+      "NULL_OR_PTR",
+      "NULL_OR_PTR"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetComputerNameA": {
+    "module": "kernel32.dll",
+    "category": "unknown",
+    "args": [
+      "NULL_OR_PTR",
+      "NULL_OR_PTR"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetComputerNameExW": {
+    "module": "kernel32.dll",
+    "category": "unknown",
+    "args": [
+      "DIRECT",
+      "NULL_OR_PTR",
+      "NULL_OR_PTR"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetComputerNameExA": {
+    "module": "kernel32.dll",
+    "category": "unknown",
+    "args": [
+      "DIRECT",
+      "NULL_OR_PTR",
+      "NULL_OR_PTR"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetSystemTimeAsFileTime": {
+    "module": "kernel32.dll",
+    "category": "unknown",
+    "args": [
+      "NULL_OR_PTR"
+    ],
+    "return_type": "VOID",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetSystemTime": {
+    "module": "kernel32.dll",
+    "category": "unknown",
+    "args": [
+      "NULL_OR_PTR"
+    ],
+    "return_type": "VOID",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetLocalTime": {
+    "module": "kernel32.dll",
+    "category": "unknown",
+    "args": [
+      "NULL_OR_PTR"
+    ],
+    "return_type": "VOID",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetSystemInfo": {
+    "module": "kernel32.dll",
+    "category": "unknown",
+    "args": [
+      "NULL_OR_PTR"
+    ],
+    "return_type": "VOID",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetNativeSystemInfo": {
+    "module": "kernel32.dll",
+    "category": "unknown",
+    "args": [
+      "NULL_OR_PTR"
+    ],
+    "return_type": "VOID",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GlobalMemoryStatusEx": {
+    "module": "kernel32.dll",
+    "category": "unknown",
+    "args": [
+      "NULL_OR_PTR"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetUserNameW": {
+    "module": "advapi32.dll",
+    "category": "unknown",
+    "args": [
+      "NULL_OR_PTR",
+      "NULL_OR_PTR"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetUserNameA": {
+    "module": "advapi32.dll",
+    "category": "unknown",
+    "args": [
+      "NULL_OR_PTR",
+      "NULL_OR_PTR"
+    ],
+    "return_type": "BOOL",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "NtQuerySystemTime": {
+    "module": "ntdll.dll",
+    "category": "unknown",
+    "args": [
+      "NULL_OR_PTR"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "GetWriteWatch": {
+    "module": "kernel32.dll",
+    "category": "unknown",
+    "args": [
+      "DIRECT",
+      "NULL_OR_PTR",
+      "DIRECT",
+      "NULL_OR_PTR",
+      "NULL_OR_PTR",
+      "NULL_OR_PTR"
+    ],
+    "return_type": "DIRECT",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "NtCreateFile": {
+    "module": "ntdll.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "DIRECT",
+      "WSTRING",
+      "DIRECT",
+      "DIRECT",
+      "DIRECT",
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "ZwCreateFile": {
+    "module": "ntdll.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "DIRECT",
+      "WSTRING",
+      "DIRECT",
+      "DIRECT",
+      "DIRECT",
+      "DIRECT",
+      "DIRECT"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "NtOpenFile": {
+    "module": "ntdll.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "DIRECT",
+      "WSTRING",
+      "DIRECT"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "ZwOpenFile": {
+    "module": "ntdll.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "DIRECT",
+      "WSTRING",
+      "DIRECT"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "NtReadFile": {
+    "module": "ntdll.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "WSTRING",
+      "WSTRING",
+      "DIRECT"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "ZwReadFile": {
+    "module": "ntdll.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "WSTRING",
+      "WSTRING",
+      "DIRECT"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "NtWriteFile": {
+    "module": "ntdll.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "WSTRING",
+      "WSTRING",
+      "DIRECT"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "ZwWriteFile": {
+    "module": "ntdll.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "WSTRING",
+      "WSTRING",
+      "DIRECT"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "NtQueryInformationFile": {
+    "module": "ntdll.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "WSTRING",
+      "DIRECT",
+      "WSTRING"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "ZwQueryInformationFile": {
+    "module": "ntdll.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "WSTRING",
+      "DIRECT",
+      "WSTRING"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "NtSetInformationFile": {
+    "module": "ntdll.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "WSTRING",
+      "WSTRING",
+      "DIRECT"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "ZwSetInformationFile": {
+    "module": "ntdll.dll",
+    "category": "file",
+    "args": [
+      "WSTRING",
+      "WSTRING",
+      "WSTRING",
+      "DIRECT"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "NtDeleteFile": {
+    "module": "ntdll.dll",
+    "category": "file",
+    "args": [
+      "WSTRING"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+  "ZwDeleteFile": {
+    "module": "ntdll.dll",
+    "category": "file",
+    "args": [
+      "WSTRING"
+    ],
+    "return_type": "STATUS",
+    "out_handle": null,
+    "invalidates_arg": null
+  },
+
+  "NtClose": {
+    "module": "ntdll.dll", "category": "unknown",
+    "args": ["WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwClose": {
+    "module": "ntdll.dll", "category": "unknown",
+    "args": ["WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtWaitForSingleObject": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtWaitForMultipleObjects": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["DIRECT","WSTRING","DIRECT","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+
+  "NtCreateMutant": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwCreateMutant": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtOpenMutant": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwOpenMutant": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtReleaseMutant": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwReleaseMutant": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtCreateEvent": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","DIRECT","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwCreateEvent": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","DIRECT","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtOpenEvent": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwOpenEvent": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtSetEvent": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtResetEvent": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtCreateSemaphore": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","DIRECT","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwCreateSemaphore": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","DIRECT","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtOpenSemaphore": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtCreateTimer": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwCreateTimer": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtOpenTimer": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtCreateIoCompletion": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwCreateIoCompletion": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtOpenIoCompletion": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtCreateJobObject": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtOpenJobObject": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtCreateDebugObject": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "DbgUiConnectToDbg": {
+    "module": "ntdll.dll", "category": "sync",
+    "args": [],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+
+  "NtOpenKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwOpenKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtOpenKeyEx": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwOpenKeyEx": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtCreateKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","WSTRING","DIRECT","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwCreateKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","WSTRING","DIRECT","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtQueryValueKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","WSTRING","DIRECT","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwQueryValueKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","WSTRING","DIRECT","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtSetValueKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","WSTRING","DIRECT","DIRECT","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwSetValueKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","WSTRING","DIRECT","DIRECT","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtDeleteValueKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwDeleteValueKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtQueryKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwQueryKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtEnumerateKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","DIRECT","DIRECT","WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwEnumerateKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","DIRECT","DIRECT","WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtEnumerateValueKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","DIRECT","DIRECT","WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwEnumerateValueKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","DIRECT","DIRECT","WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtDeleteKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwDeleteKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtFlushKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwFlushKey": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtQueryLicenseValue": {
+    "module": "ntdll.dll", "category": "registry",
+    "args": ["WSTRING","WSTRING","WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+
+  "NtAllocateVirtualMemory": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwAllocateVirtualMemory": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtFreeVirtualMemory": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwFreeVirtualMemory": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtProtectVirtualMemory": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwProtectVirtualMemory": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtReadVirtualMemory": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwReadVirtualMemory": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtWriteVirtualMemory": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwWriteVirtualMemory": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtMapViewOfSection": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwMapViewOfSection": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtUnmapViewOfSection": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwUnmapViewOfSection": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtUnmapViewOfSectionEx": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtCreateSection": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwCreateSection": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtOpenSection": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwOpenSection": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtDuplicateObject": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","DIRECT","DIRECT","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwDuplicateObject": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","DIRECT","DIRECT","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+
+  "NtOpenProcess": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwOpenProcess": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtOpenThread": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwOpenThread": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtCreateThreadEx": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","WSTRING","WSTRING","DIRECT","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtCreateUserProcess": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwCreateUserProcess": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtSuspendThread": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtResumeThread": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwResumeThread": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtGetContextThread": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtSetContextThread": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtQueryInformationProcess": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwQueryInformationProcess": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtSetInformationProcess": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwSetInformationProcess": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtQueryInformationThread": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwQueryInformationThread": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtSetInformationThread": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwSetInformationThread": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+
+  "NtOpenProcessToken": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtOpenProcessTokenEx": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtOpenThreadToken": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtOpenThreadTokenEx": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","DIRECT","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtQueryInformationToken": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtSetInformationToken": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtAdjustPrivilegesToken": {
+    "module": "ntdll.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+
+  "LdrLoadDll": {
+    "module": "ntdll.dll", "category": "dll",
+    "args": ["WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "LdrGetDllHandle": {
+    "module": "ntdll.dll", "category": "dll",
+    "args": ["WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "LdrGetDllHandleEx": {
+    "module": "ntdll.dll", "category": "dll",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "LdrGetDllHandleByName": {
+    "module": "ntdll.dll", "category": "dll",
+    "args": ["WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "LdrGetProcedureAddressForCaller": {
+    "module": "ntdll.dll", "category": "dll",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+
+  "RtlSetCurrentTransaction": {
+    "module": "ntdll.dll", "category": "unknown",
+    "args": ["WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtSetInformationTransaction": {
+    "module": "ntdll.dll", "category": "unknown",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "TpAllocWork": {
+    "module": "ntdll.dll", "category": "unknown",
+    "args": ["WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "TpPostWork": {
+    "module": "ntdll.dll", "category": "unknown",
+    "args": ["WSTRING"],
+    "return_type": "VOID", "out_handle": null, "invalidates_arg": null
+  },
+  "TpReleaseWork": {
+    "module": "ntdll.dll", "category": "unknown",
+    "args": ["WSTRING"],
+    "return_type": "VOID", "out_handle": null, "invalidates_arg": null
+  },
+  "RtlAddVectoredExceptionHandler": {
+    "module": "ntdll.dll", "category": "unknown",
+    "args": ["DIRECT","WSTRING"],
+    "return_type": "PTR", "out_handle": null, "invalidates_arg": null
+  },
+  "RtlRemoveVectoredExceptionHandler": {
+    "module": "ntdll.dll", "category": "unknown",
+    "args": ["WSTRING"],
+    "return_type": "DIRECT", "out_handle": null, "invalidates_arg": null
+  },
+  "RtlAddVectoredContinueHandler": {
+    "module": "ntdll.dll", "category": "unknown",
+    "args": ["DIRECT","WSTRING"],
+    "return_type": "PTR", "out_handle": null, "invalidates_arg": null
+  },
+  "RtlRemoveVectoredContinueHandler": {
+    "module": "ntdll.dll", "category": "unknown",
+    "args": ["WSTRING"],
+    "return_type": "DIRECT", "out_handle": null, "invalidates_arg": null
+  },
+  "AddVectoredExceptionHandler": {
+    "module": "kernel32.dll", "category": "unknown",
+    "args": ["DIRECT","WSTRING"],
+    "return_type": "PTR", "out_handle": null, "invalidates_arg": null
+  },
+  "RemoveVectoredExceptionHandler": {
+    "module": "kernel32.dll", "category": "unknown",
+    "args": ["WSTRING"],
+    "return_type": "DIRECT", "out_handle": null, "invalidates_arg": null
+  },
+  "SetUnhandledExceptionFilter": {
+    "module": "kernel32.dll", "category": "unknown",
+    "args": ["WSTRING"],
+    "return_type": "PTR", "out_handle": null, "invalidates_arg": null
+  },
+  "ShellExecuteExW": {
+    "module": "shell32.dll", "category": "process",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "UpdateProcThreadAttribute": {
+    "module": "kernel32.dll", "category": "process",
+    "args": ["WSTRING","DIRECT","DIRECT","WSTRING","DIRECT","WSTRING","WSTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "CoCreateInstance": {
+    "module": "ole32.dll", "category": "unknown",
+    "args": ["WSTRING","WSTRING","DIRECT","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "CoGetClassObject": {
+    "module": "ole32.dll", "category": "unknown",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "CoInitialize": {
+    "module": "ole32.dll", "category": "unknown",
+    "args": ["WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "CoInitializeEx": {
+    "module": "ole32.dll", "category": "unknown",
+    "args": ["WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "CoUninitialize": {
+    "module": "ole32.dll", "category": "unknown",
+    "args": [],
+    "return_type": "VOID", "out_handle": null, "invalidates_arg": null
+  },
+  "OleInitialize": {
+    "module": "ole32.dll", "category": "unknown",
+    "args": ["WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "OleUninitialize": {
+    "module": "ole32.dll", "category": "unknown",
+    "args": [],
+    "return_type": "VOID", "out_handle": null, "invalidates_arg": null
+  },
+  "SystemParametersInfoW": {
+    "module": "user32.dll", "category": "unknown",
+    "args": ["DIRECT","DIRECT","WSTRING","DIRECT"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "SystemParametersInfoA": {
+    "module": "user32.dll", "category": "unknown",
+    "args": ["DIRECT","DIRECT","WSTRING","DIRECT"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "FindFirstFileExW": {
+    "module": "kernel32.dll", "category": "file",
+    "args": ["WSTRING","DIRECT","WSTRING","DIRECT","WSTRING","DIRECT"],
+    "return_type": "HANDLE", "out_handle": null, "invalidates_arg": null
+  },
+  "FindFirstFileW": {
+    "module": "kernel32.dll", "category": "file",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "HANDLE", "out_handle": null, "invalidates_arg": null
+  },
+  "FindNextFileW": {
+    "module": "kernel32.dll", "category": "file",
+    "args": ["HANDLE","WSTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "FindNextFileA": {
+    "module": "kernel32.dll", "category": "file",
+    "args": ["HANDLE","WSTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "PathCombineW": {
+    "module": "shlwapi.dll", "category": "unknown",
+    "args": ["WSTRING","WSTRING","WSTRING"],
+    "return_type": "PTR", "out_handle": null, "invalidates_arg": null
+  },
+  "PathCombineA": {
+    "module": "shlwapi.dll", "category": "unknown",
+    "args": ["ASTRING","ASTRING","ASTRING"],
+    "return_type": "PTR", "out_handle": null, "invalidates_arg": null
+  },
+  "PathCchCombineEx": {
+    "module": "kernelbase.dll", "category": "unknown",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "PathCchCombineExW": {
+    "module": "kernelbase.dll", "category": "unknown",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "PathCchCombine": {
+    "module": "kernelbase.dll", "category": "unknown",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "PathCchCombineW": {
+    "module": "kernelbase.dll", "category": "unknown",
+    "args": ["WSTRING","DIRECT","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "PathAppendW": {
+    "module": "shlwapi.dll", "category": "unknown",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "PathAppendA": {
+    "module": "shlwapi.dll", "category": "unknown",
+    "args": ["ASTRING","ASTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "PathCanonicalizeW": {
+    "module": "shlwapi.dll", "category": "unknown",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "PathCanonicalizeA": {
+    "module": "shlwapi.dll", "category": "unknown",
+    "args": ["ASTRING","ASTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "PathAddBackslashW": {
+    "module": "shlwapi.dll", "category": "unknown",
+    "args": ["WSTRING"],
+    "return_type": "PTR", "out_handle": null, "invalidates_arg": null
+  },
+  "PathAddBackslashA": {
+    "module": "shlwapi.dll", "category": "unknown",
+    "args": ["ASTRING"],
+    "return_type": "PTR", "out_handle": null, "invalidates_arg": null
+  },
+  "PathRemoveFileSpecW": {
+    "module": "shlwapi.dll", "category": "unknown",
+    "args": ["WSTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "PathRemoveFileSpecA": {
+    "module": "shlwapi.dll", "category": "unknown",
+    "args": ["ASTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "PathAllocCombine": {
+    "module": "kernelbase.dll", "category": "unknown",
+    "args": ["WSTRING","WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "PathAllocCombineW": {
+    "module": "kernelbase.dll", "category": "unknown",
+    "args": ["WSTRING","WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "UrlCanonicalizeW": {
+    "module": "shlwapi.dll", "category": "unknown",
+    "args": ["WSTRING","WSTRING","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "UrlCanonicalizeA": {
+    "module": "shlwapi.dll", "category": "unknown",
+    "args": ["ASTRING","ASTRING","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "UrlCombineW": {
+    "module": "shlwapi.dll", "category": "unknown",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "UrlCombineA": {
+    "module": "shlwapi.dll", "category": "unknown",
+    "args": ["ASTRING","ASTRING","ASTRING","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "RtlDosPathNameToNtPathName_U": {
+    "module": "ntdll.dll", "category": "unknown",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "RtlDosPathNameToRelativeName_U": {
+    "module": "ntdll.dll", "category": "unknown",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "LookupPrivilegeValueW": {
+    "module": "advapi32.dll", "category": "unknown",
+    "args": ["WSTRING","WSTRING","WSTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "LookupPrivilegeValueA": {
+    "module": "advapi32.dll", "category": "unknown",
+    "args": ["ASTRING","ASTRING","WSTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "LookupPrivilegeNameW": {
+    "module": "advapi32.dll", "category": "unknown",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "LookupPrivilegeNameA": {
+    "module": "advapi32.dll", "category": "unknown",
+    "args": ["ASTRING","WSTRING","ASTRING","WSTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "AdjustTokenGroups": {
+    "module": "advapi32.dll", "category": "process",
+    "args": ["HANDLE","BOOL","WSTRING","DIRECT","WSTRING","WSTRING"],
+    "return_type": "BOOL", "out_handle": null, "invalidates_arg": null
+  },
+  "LsaOpenPolicy": {
+    "module": "advapi32.dll", "category": "unknown",
+    "args": ["WSTRING","WSTRING","DIRECT","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "OpenThreadToken": {
+    "module": "advapi32.dll", "category": "process",
+    "args": ["HANDLE","DIRECT","BOOL","PTR_OUT"],
+    "return_type": "BOOL",
+    "out_handle": {"handle_type": "HANDLE", "arg_idx": 3, "key": "hToken"},
+    "invalidates_arg": null
+  },
+  "NtQueryAttributesFile": {
+    "module": "ntdll.dll", "category": "file",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "ZwQueryAttributesFile": {
+    "module": "ntdll.dll", "category": "file",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtQueryFullAttributesFile": {
+    "module": "ntdll.dll", "category": "file",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtFlushBuffersFile": {
+    "module": "ntdll.dll", "category": "file",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtCancelIoFile": {
+    "module": "ntdll.dll", "category": "file",
+    "args": ["WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtDeviceIoControlFile": {
+    "module": "ntdll.dll", "category": "file",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","DIRECT","WSTRING","DIRECT","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtFsControlFile": {
+    "module": "ntdll.dll", "category": "file",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","DIRECT","WSTRING","DIRECT","WSTRING","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtLockFile": {
+    "module": "ntdll.dll", "category": "file",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","WSTRING","DIRECT","DIRECT"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  },
+  "NtUnlockFile": {
+    "module": "ntdll.dll", "category": "file",
+    "args": ["WSTRING","WSTRING","WSTRING","WSTRING","WSTRING"],
+    "return_type": "STATUS", "out_handle": null, "invalidates_arg": null
+  }
+}

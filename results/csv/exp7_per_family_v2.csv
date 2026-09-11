@@ -1,0 +1,16 @@
+feature_set,family,f1
+BC_T_combined,agenttesla,95.0
+BC_T_combined,amadey,91.9
+BC_T_combined,berbew,100.0
+BC_T_combined,dacic,87.8
+BC_T_combined,redline,90.5
+BCE_T_combined,agenttesla,95.0
+BCE_T_combined,amadey,89.5
+BCE_T_combined,berbew,100.0
+BCE_T_combined,dacic,85.7
+BCE_T_combined,redline,90.0
+D_api_categories,agenttesla,95.0
+D_api_categories,amadey,87.8
+D_api_categories,berbew,100.0
+D_api_categories,dacic,90.0
+D_api_categories,redline,87.2

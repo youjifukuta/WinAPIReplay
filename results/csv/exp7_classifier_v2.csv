@@ -1,0 +1,8 @@
+feature_set,description,n_features,acc_5fold,f1_5fold,acc_loo,f1_loo,acc_loo_ci_low,acc_loo_ci_high,mcnemar_vs_D_chi2,mcnemar_vs_D_p
+A_sysmon_counts,Sysmon event counts only,4,92.0,92.0,93.0,93.0,86.3,96.6,,
+B_sysmon_ratios,Sysmon counts + normalised ratios + log_total,7,92.0,91.9,92.0,91.9,85.0,95.9,,
+D_api_categories,"API category rates from Exp1 (same 100 samples, baseline)",5,92.0,92.0,94.0,94.0,87.5,97.2,,
+C_T_registry_paths,"Registry path BoW, per-fold vocab top-60",60,91.0,90.9,91.0,90.9,83.8,95.2,,
+E_T_file_paths,"File path BoW via transforms, per-fold vocab top-10",10,83.0,82.6,78.0,77.2,68.9,85.0,,
+BC_T_combined,"B + C_T, per-fold vocab [7+60 nom.] — primary",67,93.0,93.0,92.0,92.0,85.0,95.9,0.167,0.6831
+BCE_T_combined,"B + C_T + E_T, per-fold vocab [7+60+10 nom.]",77,92.0,92.0,91.0,91.0,83.8,95.2,,
