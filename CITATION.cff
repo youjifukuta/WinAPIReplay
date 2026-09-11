@@ -8,7 +8,7 @@ abstract: >-
   confines every side effect to disposable places. This repository contains the
   re-execution tool, the API signature database, the conversion and evaluation
   scripts, the SHA-256 identifiers of the 500 analysed traces, and the processed
-  result files that support the figures and tables of the paper.
+  result files that underlie the results reported in the paper.
 type: software
 license: MIT
 authors:
